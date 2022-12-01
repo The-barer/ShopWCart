@@ -1,6 +1,6 @@
 export const GoodsItem = (props) => {
   const { name, id, price, description, full_background } = props.item;
-  const { addToCart = Function.prototype } = props;
+  const { increseOrderItem = Function.prototype } = props;
 
   return (
     <div
@@ -16,17 +16,7 @@ export const GoodsItem = (props) => {
         <p>{description}</p>
       </div>
       <div className="card-action">
-        <button
-          className="btn"
-          onClick={() =>
-            addToCart({
-              id,
-              price,
-              name,
-              description,
-            })
-          }
-        >
+        <button className="btn" onClick={() => increseOrderItem(id)}>
           Купить
         </button>
         <span className="right" style={{ fontSize: "1.8rem" }}>

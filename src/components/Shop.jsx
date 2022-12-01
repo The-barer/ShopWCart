@@ -14,22 +14,46 @@ export default function Shop() {
     setIsBasketShow(!isBasketShow);
   };
 
-  const addToCart = (item) => {
-    const itemIndexInOrder = order.findIndex((orderItem) => {
-      return orderItem.id === item.id;
-    });
-    if (itemIndexInOrder < 0) {
-      const newItem = { ...item, orderCount: 1 };
-      return setOrder([...order, newItem]);
-    } else {
-      order[itemIndexInOrder].orderCount++;
-      return setOrder([...order]);
-    }
-  };
+  function findIndexInList(id, list = []) {
+    return list.findIndex((item) => item.id === id);
+  }
 
-  const removeFromCart = (id) => {
+  function addToCart(id) {
+    const item = goods[findIndexInList(id, goods)];
+    const newItem = {
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: 1,
+    };
+    setOrder([...order, newItem]);
+  }
+
+  function removeFromCart(id) {
     setOrder(order.filter((item) => item.id !== id));
-  };
+  }
+
+  function increseOrderItem(id) {
+    const itemIndexInOrder = findIndexInList(id, order);
+    if (itemIndexInOrder < 0) {
+      addToCart(id);
+    } else {
+      order[itemIndexInOrder].quantity++;
+      setOrder([...order]);
+    }
+  }
+
+  function decreaseOrderItem(id) {
+    const itemIndexInOrder = findIndexInList(id, order);
+    if (itemIndexInOrder < 0) {
+      return;
+    } else if (itemIndexInOrder === 1) {
+      removeFromCart(id);
+    } else {
+      order[itemIndexInOrder].quantity--;
+      setOrder([...order]);
+    }
+  }
 
   const updateGoods = () => {
     setLoading(true);
@@ -62,13 +86,16 @@ export default function Shop() {
       {loading ? (
         <Preloader />
       ) : (
-        <GoodsList goods={goods} addToCart={addToCart} />
+        <GoodsList goods={goods} increseOrderItem={increseOrderItem} />
       )}
       {isBasketShow && (
         <BasketList
           order={order}
           hadleBasketShow={hadleBasketShow}
+          increseOrderItem={increseOrderItem}
+          decreaseOrderItem={decreaseOrderItem}
           removeFromCart={removeFromCart}
+          
         />
       )}
     </main>
