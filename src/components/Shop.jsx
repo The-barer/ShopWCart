@@ -47,7 +47,7 @@ export default function Shop() {
     const itemIndexInOrder = findIndexInList(id, order);
     if (itemIndexInOrder < 0) {
       return;
-    } else if (itemIndexInOrder === 1) {
+    } else if (order[itemIndexInOrder].quantity === 1) {
       removeFromCart(id);
     } else {
       order[itemIndexInOrder].quantity--;
@@ -95,7 +95,6 @@ export default function Shop() {
           increseOrderItem={increseOrderItem}
           decreaseOrderItem={decreaseOrderItem}
           removeFromCart={removeFromCart}
-          
         />
       )}
     </main>
