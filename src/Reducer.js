@@ -26,8 +26,7 @@ export default function reducer(state, { type, payload }) {
 
   function decreaseItemOrder() {
     if (state.order[findIndexInList(payload.id, state.order)].quantity === 0) {
-      console.log(state.order);
-      return {...state}
+      return removeItemOrder()
     } else {
       return {
         ...state,
