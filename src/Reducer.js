@@ -1,16 +1,16 @@
-export default function Reducer(state, { type, payload }) {
+export default function reducer(state, { type, payload }) {
   function findIndexInList(id, list = []) {
     return list.findIndex((item) => item.id === id);
   }
 
-  function removeFromOrder() {
+  function removeItemOrder() {
     return {
       ...state,
       order: state.order.filter((item) => item.id !== payload.id),
     };
   }
 
-  function addToCart() {
+  function addItemToOrder() {
     const item = state.goods[findIndexInList(payload.id, state.goods)];
     const newItem = {
       id: item.id,
@@ -24,45 +24,74 @@ export default function Reducer(state, { type, payload }) {
     };
   }
 
-  function increaseOrderItem() {
-    const itemIndexInOrder = findIndexInList(payload.id, state.order);
-    if (itemIndexInOrder < 0) {
-      addToCart();
+  function decreaseItemOrder() {
+    if (state.order[findIndexInList(payload.id, state.order)].quantity === 0) {
+      console.log(state.order);
+      return {...state}
     } else {
-      state.order[itemIndexInOrder].quantity++;
       return {
         ...state,
-      };
+        order: state.order.map((el) => {
+          if (el.id === payload.id) {
+            const newQuantity = el.quantity--
+            return { ...el, quantity: newQuantity }
+          } else {
+            return el
+          }
+        })
+      }
     }
-  }
-  function decreaseOrderItem() {
+
+  };
+
+
+  function increaseItemOrder() {
     const itemIndexInOrder = findIndexInList(payload.id, state.order);
+
     if (itemIndexInOrder < 0) {
-      return;
-    } else if (state.order[itemIndexInOrder].quantity === 1) {
-      removeFromOrder();
+      return addItemToOrder();
     } else {
-      state.order[itemIndexInOrder].quantity--;
       return {
         ...state,
-      };
-    }
+        order: state.order.map((item) => {
+          if (item.id === payload.id) {
+            const newQuantity = item.quantity++
+            return { ...item, quantity: newQuantity }
+          } else {
+            return item
+          }
+        })
+      }
+    };
   }
 
   switch (type) {
-    case "REMOVE_FROM_ORDER":
-      return removeFromOrder();
+    case "REMOVE_ITEM_ORDER":
+      return removeItemOrder();
 
     case "INCREASE_ITEM_ORDER":
-      return increaseOrderItem();
+      return increaseItemOrder();
 
     case "DECREASE_ITEM_ORDER":
-      return decreaseOrderItem();
+      return decreaseItemOrder();
 
-    case "BASKET_TOGGLE":
+    case "TOGGLE_BASKET":
       return {
         ...state,
         isBasketShow: !state.isBasketShow,
+      };
+
+    case "SET_LOADING":
+      return {
+        ...state,
+        loading: payload,
+      };
+
+    case "SET_GOODS":
+      return {
+        ...state,
+        goods: payload || [],
+        loading: false,
       };
 
     default:

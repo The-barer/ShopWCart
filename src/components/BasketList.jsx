@@ -1,12 +1,8 @@
+import { useContext } from "react";
+import { ShopContext } from "../Context";
 import { BasketItem } from "./BasketItem";
-export const BasketList = (props) => {
-  const {
-    order = [],
-    hadleBasketShow = Function.prototype,
-    removeFromCart = Function.prototype,
-    increseOrderItem = Function.prototype,
-    decreaseOrderItem = Function.prototype,
-  } = props;
+export const BasketList = () => {
+  const {order, toggleBasket } = useContext(ShopContext)
   const totalPrice = order.reduce(
     (total, item) => total + item.price * item.quantity,
     0
@@ -20,11 +16,8 @@ export const BasketList = (props) => {
           order.map((item, index) => (
             <BasketItem
               key={item.id}
-              {...item}
               index={index}
-              removeFromCart={removeFromCart}
-              increseOrderItem={increseOrderItem}
-              decreaseOrderItem={decreaseOrderItem}
+              {...item}
             />
           ))
         ) : (
@@ -34,7 +27,7 @@ export const BasketList = (props) => {
           Общая стоимость: {totalPrice}
           {" руб."}
         </li>
-        <i className="material-icons basket-close" onClick={hadleBasketShow}>
+        <i className="material-icons basket-close" onClick={toggleBasket}>
           close
         </i>
         <button className="btn btn-buy darken-1">Купить</button>
