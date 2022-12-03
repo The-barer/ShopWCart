@@ -30,12 +30,12 @@ export default function reducer(state, { type, payload }) {
     } else {
       return {
         ...state,
-        order: state.order.map((el) => {
-          if (el.id === payload.id) {
-            const newQuantity = el.quantity--
-            return { ...el, quantity: newQuantity }
+        order: state.order.map((item) => {
+          if (item.id === payload.id) {
+            const newQuantity = item.quantity--
+            return { ...item, quantity: newQuantity }
           } else {
-            return el
+            return item
           }
         })
       }

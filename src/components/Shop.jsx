@@ -28,9 +28,6 @@ export default function Shop() {
 
     return (
         <main className="container content">
-            <button onClick={updateGoods} className="btn">
-                Get items
-            </button>
             <Cart />
             {loading ? <Preloader /> : <GoodsList />}
             {isBasketShow && <BasketList />}
